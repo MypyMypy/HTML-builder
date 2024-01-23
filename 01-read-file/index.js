@@ -1,10 +1,11 @@
 const fs = require('fs');
 
-fs.readFile('./01-read-file/text.txt', 'utf8', (err, data) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
+const readStream = fs.createReadStream('./01-read-file/text.txt', 'utf8');
 
+readStream.on('data', (data) => {
   console.log(data);
+});
+
+readStream.on('error', (err) => {
+  console.error(err);
 });
