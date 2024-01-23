@@ -27,8 +27,8 @@ function compileStyles(stylesFolderPath, outputFolderPath, outputFile) {
   });
 }
 
-const stylesFolderPath = './styles';
-const outputFolderPath = './project-dist';
+const stylesFolderPath = './05-merge-styles/styles';
+const outputFolderPath = './05-merge-styles/project-dist';
 const outputFile = path.join(outputFolderPath, 'bundle.css');
 
 compileStyles(stylesFolderPath, outputFolderPath, outputFile);

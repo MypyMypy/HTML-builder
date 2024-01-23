@@ -113,18 +113,18 @@ function compileHTMLTemplate(
   });
 }
 
+const rootDir = './06-build-page';
 const targetDir = './project-dist';
 
-const componentsFolderPath = './components';
-const templateFilePath = './template.html';
-const outputHTMLFilePath = path.join(targetDir, './index.html');
+const componentsFolderPath = path.join(rootDir, './components');
+const templateFilePath = path.join(rootDir, './template.html');
+const stylesFolderPath = path.join(rootDir, './styles');
+const assetsFolderPath = path.join(rootDir, './assets');
 
-const assetsFolderPath = './assets';
-const targetAssetsPath = path.join(targetDir, assetsFolderPath);
+const outputHTMLFilePath = path.join(rootDir, targetDir, './index.html');
+const outputStylesFile = path.join(rootDir, targetDir, './style.css');
+const outputAssetsPath = path.join(rootDir, targetDir, './assets');
 
-const stylesFolderPath = './styles';
-const outputStylesFile = path.join(targetDir, 'style.css');
-
-copyDir(assetsFolderPath, targetAssetsPath);
+copyDir(assetsFolderPath, outputAssetsPath);
 compileHTMLTemplate(templateFilePath, componentsFolderPath, outputHTMLFilePath);
 compileStyles(stylesFolderPath, targetDir, outputStylesFile);

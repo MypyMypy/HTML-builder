@@ -39,7 +39,7 @@ function copyDir(sourceDir, targetDir) {
   });
 }
 
-const sourceDir = './files';
-const targetDir = './files-copy';
+const sourceDir = './04-copy-directory/files';
+const targetDir = './04-copy-directory/files-copy';
 
 copyDir(sourceDir, targetDir);
