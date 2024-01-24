@@ -8,6 +8,24 @@ function copyDir(sourceDir, targetDir) {
       return;
     }
 
+    fs.readdir(targetDir, (err, files) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+
+      files.forEach((file) => {
+        const filePath = path.join(targetDir, file);
+
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+        });
+      });
+    });
+
     fs.readdir(sourceDir, (err, files) => {
       if (err) {
         console.error(err);

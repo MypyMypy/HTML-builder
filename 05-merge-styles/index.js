@@ -11,19 +11,36 @@ function compileStyles(stylesFolderPath, outputFolderPath, outputFile) {
     const cssFiles = files.filter((file) => path.extname(file) === '.css');
 
     let bundleContent = '';
+    let fileCount = 0;
+
     cssFiles.forEach((file) => {
       const filePath = path.join(stylesFolderPath, file);
-      const fileContent = fs.readFileSync(filePath, 'utf8');
-      bundleContent += fileContent;
+      fs.readFile(filePath, 'utf8', (err, fileContent) => {
+        if (err) {
+          console.error('Error reading file:', err);
+          return;
+        }
+        bundleContent += fileContent;
+        fileCount++;
+
+        if (fileCount === cssFiles.length) {
+          fs.mkdir(outputFolderPath, { recursive: true }, (err) => {
+            if (err) {
+              console.error('Error creating output folder:', err);
+              return;
+            }
+
+            fs.writeFile(outputFile, bundleContent, 'utf8', (err) => {
+              if (err) {
+                console.error('Error writing file:', err);
+                return;
+              }
+              console.log('bundle.css was created');
+            });
+          });
+        }
+      });
     });
-
-    if (!fs.existsSync(outputFolderPath)) {
-      fs.mkdirSync(outputFolderPath);
-    }
-
-    fs.writeFileSync(outputFile, bundleContent, 'utf8');
-
-    console.log('bundle.css was created');
   });
 }
 

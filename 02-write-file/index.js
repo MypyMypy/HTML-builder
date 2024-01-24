@@ -9,13 +9,17 @@ const rl = readline.createInterface({
 });
 
 rl.on('line', (input) => {
-  fs.appendFile('./02-write-file/output.txt', input + '\n', (err) => {
-    if (err) {
-      console.error('Error writing to file:', err);
-    } else {
-      console.log('Text successfully written to file "output.txt"');
-    }
-  });
+  if (input === 'exit') {
+    rl.close();
+  } else {
+    fs.appendFile('./02-write-file/output.txt', input + '\n', (err) => {
+      if (err) {
+        console.error('Error writing to file:', err);
+      } else {
+        console.log('Text successfully written to file "output.txt"');
+      }
+    });
+  }
 });
 
 rl.on('close', () => {

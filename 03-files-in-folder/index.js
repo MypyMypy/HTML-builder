@@ -17,10 +17,14 @@ fs.readdir(folderPath, (err, files) => {
         return;
       }
 
-      const fileInfo = `${file} - ${path.extname(file).slice(1)} - ${
-        stats.size
-      }b`;
-      console.log(fileInfo);
+      if (stats.isFile()) {
+        const fileInfo = `${file} - ${path.extname(file).slice(1)} - ${
+          stats.size
+        }b`;
+        console.log(fileInfo);
+      } else if (stats.isDirectory()) {
+        console.log(`${file} - ${stats.size}`);
+      }
     });
   });
 });

@@ -49,19 +49,36 @@ function compileStyles(stylesFolderPath, outputFolderPath, outputFile) {
     const cssFiles = files.filter((file) => path.extname(file) === '.css');
 
     let bundleContent = '';
+    let fileCount = 0;
+
     cssFiles.forEach((file) => {
       const filePath = path.join(stylesFolderPath, file);
-      const fileContent = fs.readFileSync(filePath, 'utf8');
-      bundleContent += fileContent;
+      fs.readFile(filePath, 'utf8', (err, fileContent) => {
+        if (err) {
+          console.error('Error reading file:', err);
+          return;
+        }
+        bundleContent += fileContent;
+        fileCount++;
+
+        if (fileCount === cssFiles.length) {
+          fs.mkdir(outputFolderPath, { recursive: true }, (err) => {
+            if (err) {
+              console.error('Error creating output folder:', err);
+              return;
+            }
+
+            fs.writeFile(outputFile, bundleContent, 'utf8', (err) => {
+              if (err) {
+                console.error('Error writing file:', err);
+                return;
+              }
+              console.log('bundle.css was created');
+            });
+          });
+        }
+      });
     });
-
-    if (!fs.existsSync(outputFolderPath)) {
-      fs.mkdirSync(outputFolderPath);
-    }
-
-    fs.writeFileSync(outputFile, bundleContent, 'utf8');
-
-    console.log('bundle.css was created');
   });
 }
 
@@ -82,31 +99,47 @@ function compileHTMLTemplate(
         return;
       }
 
+      let fileCount = 0;
+
       files.forEach((file) => {
         const componentName = path.parse(file).name;
         const componentFilePath = path.join(componentsFolderPath, file);
-        const componentContent = fs.readFileSync(componentFilePath, 'utf8');
-        const componentPlaceholder = `{{${componentName}}}`;
 
-        templateContent = templateContent.replace(
-          componentPlaceholder,
-          componentContent,
-        );
-      });
-
-      fs.mkdir(path.dirname(outputFilePath), { recursive: true }, (err) => {
-        if (err) {
-          console.error('Error creating output directory:', err);
-          return;
-        }
-
-        fs.writeFile(outputFilePath, templateContent, 'utf8', (err) => {
+        fs.readFile(componentFilePath, 'utf8', (err, componentContent) => {
           if (err) {
-            console.error('Error writing output file:', err);
+            console.error('Error reading component file:', err);
             return;
           }
 
-          console.log('index.html was created');
+          const componentPlaceholder = `{{${componentName}}}`;
+          templateContent = templateContent.replace(
+            componentPlaceholder,
+            componentContent,
+          );
+
+          fileCount++;
+
+          if (fileCount === files.length) {
+            fs.mkdir(
+              path.dirname(outputFilePath),
+              { recursive: true },
+              (err) => {
+                if (err) {
+                  console.error('Error creating output directory:', err);
+                  return;
+                }
+
+                fs.writeFile(outputFilePath, templateContent, 'utf8', (err) => {
+                  if (err) {
+                    console.error('Error writing output file:', err);
+                    return;
+                  }
+
+                  console.log('index.html was created');
+                });
+              },
+            );
+          }
         });
       });
     });
