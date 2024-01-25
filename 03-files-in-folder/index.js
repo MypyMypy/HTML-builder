@@ -23,8 +23,6 @@ fs.readdir(folderPath, (err, files) => {
           stats.size
         }b`;
         console.log(fileInfo);
-      } else if (stats.isDirectory()) {
-        console.log(`${file} - ${stats.size}`);
       }
     });
   });
